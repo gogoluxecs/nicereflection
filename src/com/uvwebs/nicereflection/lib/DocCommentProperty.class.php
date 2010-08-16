@@ -2,22 +2,11 @@
 class nicereflection_lib_DocCommentProperty
 extends nicereflection_lib_AbstractDocComment
 {
-	/**
-	 * Doc comments, that supportes parsing
-	 *
-	 * @return Array
-	 */
-	static private $supportedDocComments = array(
-		'@RequestMethod',
-		'@Response',
-	);
+	private $docComments = array();
 
 	public function parse()
 	{
 		$r = $this->r;
-
-		if(!$this->validateParse())
-			return array();
 
 		$replace = array(
 			'*',
@@ -25,39 +14,21 @@ extends nicereflection_lib_AbstractDocComment
 			"\r",
 			"\r\n",
 			"\n",
+			"\t",
 			' '
 		);
 
-		$docComment = str_replace($replace, '', $r->getDocComment());
+		$properties = $this->r->getProperties(ReflectionProperty::IS_PRIVATE);
 
-		return array_filter(
-			explode('@', trim($docComment)
-		));
-	}
-
-	/**
-	 * Rules to validate parse of doc comment
-	 *
-	 * @return Bool
-	 */
-	private function validateParse()
-	{
-		$r = $this->r;
-
-		if($r->getDocComment() == false || strpos($r->getDocComment(), '@') === false)
-			return false;
-
-		$i = 0;
-		foreach(self::$supportedDocComments as $option)
+		$docComments = array();
+		foreach($properties as $property)
 		{
-			if(strpos($r->getDocComment(), $option) !== false)
-				$i++;
+			$docComment = str_replace($replace, '', $property->getDocComment());
+			$docComment = array_filter(explode('@', trim($docComment)));
+			$docComments[$property->getName()] = $docComment;
 		}
 
-		if($i == 0)
-			return false;
-
-		return true;
+		return $docComments;
 	}
 }
 
