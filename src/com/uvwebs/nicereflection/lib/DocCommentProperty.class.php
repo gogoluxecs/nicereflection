@@ -8,6 +8,11 @@ extends nicereflection_lib_AbstractDocComment
 	{
 		$r = $this->r;
 
+		//TODO add compile option
+		// read
+		// $handle = fopen(dirname(dirname(__FILE__)). DIRECTORY_SEPARATOR .'cache' . DIRECTORY_SEPARATOR . 'cache.txt', 'rb');
+		// return unserialize(stream_get_contents($handle));
+
 		$replace = array(
 			'*',
 			'/',
@@ -27,6 +32,11 @@ extends nicereflection_lib_AbstractDocComment
 			$docComment = array_filter(explode('@', trim($docComment)));
 			$docComments[$property->getName()] = $docComment;
 		}
+
+		// fwrite
+		// $handle = fopen(dirname(dirname(__FILE__)). DIRECTORY_SEPARATOR .'cache' . DIRECTORY_SEPARATOR . 'cache.txt', 'w+');
+		// fwrite($handle, serialize($docComments));
+		// fclose($handle);
 
 		return $docComments;
 	}

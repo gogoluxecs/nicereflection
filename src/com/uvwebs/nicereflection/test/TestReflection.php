@@ -1,13 +1,29 @@
 <?php
+
+$start = microtime(true);
+
 require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 $i = new nicereflection_test_ReflectionTest();
 $i = get_class($i);
 
-$r = nicereflection_lib_Parser::create(2, $i);
+for($j = 0; $j < 100; $j ++)
+{
+	$r = nicereflection_lib_Parser::create(2, $i);
+	$result = $r->parse();
+}
 
-$result = $r->parse();
 
+$end = microtime(true);
+
+var_dump($result);
+
+echo '<hr />';
+
+echo ($end - $start);
+
+
+/*
 echo '<pre>';
 $firstName = $result['first_name'];
 
